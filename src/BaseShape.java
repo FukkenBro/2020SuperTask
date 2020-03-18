@@ -71,7 +71,10 @@ public class BaseShape implements Shape {
 
     public boolean shapeCollision() {
         for (int i = 0; i < shapes.size(); i++) {
-            if (getDistance(shapes.get(i)) != 0 && getDistance(shapes.get(i)) <= r * 2 + lineWidth) {
+            if (getDistance(shapes.get(i)) <= r * 2 + lineWidth) {
+                if (getDistance(shapes.get(i)) == 0 && shapes.get(i).equals(this)) {
+                    return false;
+                }
                 System.out.println("Collision with shape #" + i);
                 return true;
             }

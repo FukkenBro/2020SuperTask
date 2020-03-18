@@ -10,12 +10,15 @@ import javafx.stage.Stage;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Main extends Application {
 
     public static final int BOARD_WIDTH = 800;
     public static final int BOARD_HEIGHT = 500;
+
+    private static final Random RANDOM = new Random();
 
     private int x = 0;
     private int y = 0;
@@ -61,8 +64,11 @@ public class Main extends Application {
     private void handleKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
             case Q:
-                BaseShape ball = new CircleShape(255, 0, 0);
+                BaseShape ball = new CircleShape(0,0, RANDOM.nextInt(255) , RANDOM.nextInt(255), RANDOM.nextInt(255));
                 shapes.add(ball);
+                if(ball.shapeCollision()){
+                    shapes.remove(ball);
+                }
                 break;
             case UP:
                 for (int i = 0; i < selected.size(); i++) {
