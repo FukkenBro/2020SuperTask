@@ -6,14 +6,17 @@ import java.util.Random;
 public class BaseShape implements Shape {
 
     private final Random RANDOM = new Random();
+
+    public static double step = 1;
+    protected static final int scaleStep = 1;
+    protected static final int lineWidth = 10;
     protected static GraphicsContext gc = Main.gc;
     protected static ArrayList<BaseShape> shapes = Main.shapes;
+
     protected int x;
     protected int y;
     protected int r = 50;
-    protected final int lineWidth = 10;
-    public static double step = 1;
-    protected final static int scaleStep = 1;
+
     protected boolean selected;
 
     public BaseShape() {
@@ -35,6 +38,7 @@ public class BaseShape implements Shape {
         if (shapeCollision()) {
             y += step;
         }
+
     }
 
     public void moveDown() {
@@ -42,6 +46,7 @@ public class BaseShape implements Shape {
         if (shapeCollision()) {
             y -= step;
         }
+
     }
 
     public void moveLeft() {
@@ -49,6 +54,7 @@ public class BaseShape implements Shape {
         if (shapeCollision()) {
             x += step;
         }
+
     }
 
     public void moveRight() {
@@ -62,27 +68,6 @@ public class BaseShape implements Shape {
         return false;
     }
 
-    public double getDistance(BaseShape shape) {
-        double[] thisCenter = getCenter();
-        double[] shapeCenter = shape.getCenter();
-        double deltaX = thisCenter[0] - shapeCenter[0];
-        double deltaY = thisCenter[1] - shapeCenter[1];
-        return Math.abs(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
-    }
-
-    public boolean shapeCollision() {
-        for (int i = 0; i < shapes.size(); i++) {
-            if (getDistance(shapes.get(i)) <= r * 2 + lineWidth) {
-                if (getDistance(shapes.get(i)) == 0 && shapes.get(i).equals(this)) {
-                    return false;
-                }
-                System.out.println("Collision with shape #" + i);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public double[] getCenter() {
         double[] result = new double[2];
         int ox = x + r;
@@ -91,6 +76,30 @@ public class BaseShape implements Shape {
         result[1] = oy;
         return result;
     }
+
+    public double getDistance(BaseShape shape) {
+        double[] thisCenter = getCenter();
+        System.out.println("this center "+thisCenter.toString()+" r = "+r);
+        double[] shapeCenter = shape.getCenter();
+        System.out.println("shape center "+thisCenter.toString()+" r = "+shape.r);
+        double deltaX = thisCenter[0] - shapeCenter[0];
+        double deltaY = thisCenter[1] - shapeCenter[1];
+        return Math.abs(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
+    }
+
+    public boolean shapeCollision() {
+        int bufferZone = 0;
+        for (int i = 0; i < shapes.size(); i++) {
+//            if (getDistance(shapes.get(i)) != 0 && getDistance(shapes.get(i)) <= r * 2 + lineWidth) {
+            if (getDistance(shapes.get(i)) <= r + shapes.get(i).r + lineWidth + bufferZone && !(getDistance(shapes.get(i)) == 0 && shapes.get(i).equals(this))) {
+                System.out.println("Collision with shape #" + i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     public boolean pointCollision(double x, double y) {
         double[] center = getCenter();
@@ -103,12 +112,20 @@ public class BaseShape implements Shape {
 
     public void scaleUp() {
         r += scaleStep;
+        if (shapeCollision()) {
+            r -= scaleStep;
+            return;
+        }
+        x -= scaleStep;
+        y -= scaleStep;
     }
 
     public void scaleDown() {
         if (r <= scaleStep) {
             return;
         }
+        x += scaleStep;
+        y += scaleStep;
         r -= scaleStep;
     }
 

@@ -20,10 +20,6 @@ public class Main extends Application {
 
     private static final Random RANDOM = new Random();
 
-    private int x = 0;
-    private int y = 0;
-    private int index = 0;
-
     //    private static BaseShape selected;
     private static ArrayList<BaseShape> selected = new ArrayList<>();
     public static ArrayList<BaseShape> shapes = new ArrayList<>();
@@ -48,7 +44,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        this.gc = canvas.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
 
         BaseShape ball1 = new CircleShape(10, 10, 255, 0, 0);
         shapes.add(ball1);
@@ -64,7 +60,8 @@ public class Main extends Application {
 
     private void handleKeyPressed(KeyEvent event) {
         int buttonHoldDelay = 100;
-        double stepIncrementFactor = 0.5;
+        double fastMov = 5;
+        double defaultSpeed = 1;
         boolean hold = false;
         if (System.currentTimeMillis() - time <= buttonHoldDelay) {
             hold = true;
@@ -78,48 +75,47 @@ public class Main extends Application {
                 }
                 break;
             case UP:
+                if (hold) {
+                    BaseShape.step = fastMov;
+                } else {
+                    BaseShape.step = defaultSpeed;
+                }
                 for (int i = 0; i < selected.size(); i++) {
-                    if (hold) {
-                        selected.get(i).step+=stepIncrementFactor;
-                    } else {
-                        selected.get(i).step = 1;
-                    }
                     selected.get(i).moveUp();
                 }
                 break;
             case DOWN:
+                if (hold) {
+                    BaseShape.step = fastMov;
+                } else {
+                    BaseShape.step = defaultSpeed;
+                }
                 for (int i = 0; i < selected.size(); i++) {
-                    if (hold) {
-                        selected.get(i).step+=stepIncrementFactor;
-                    } else {
-                        selected.get(i).step = 1;
-                    }
                     selected.get(i).moveDown();
                 }
                 break;
             case LEFT:
+                if (hold) {
+                    BaseShape.step= fastMov;
+                } else {
+                    BaseShape.step = defaultSpeed;
+                }
                 for (int i = 0; i < selected.size(); i++) {
-                    if (hold) {
-                        selected.get(i).step+=stepIncrementFactor;
-                    } else {
-                        selected.get(i).step = 1;
-                    }
                     selected.get(i).moveLeft();
                 }
                 break;
             case RIGHT:
+                if (hold) {
+                    BaseShape.step = fastMov;
+                } else {
+                    BaseShape.step = 1;
+                }
                 for (int i = 0; i < selected.size(); i++) {
-                    if (hold) {
-                        selected.get(i).step+=stepIncrementFactor;
-                    } else {
-                        selected.get(i).step = 1;
-                    }
                     selected.get(i).moveRight();
                 }
                 break;
             case EQUALS:
                 for (int i = 0; i < selected.size(); i++) {
-
                     selected.get(i).scaleUp();
                 }
                 break;
@@ -129,9 +125,9 @@ public class Main extends Application {
                 }
                 break;
             case A:
-                if(event.isControlDown()){
+                if (event.isControlDown()) {
                     clearSelections();
-                    for (BaseShape shape:shapes) {
+                    for (BaseShape shape : shapes) {
                         selectShape(shape);
                     }
                 }
@@ -160,7 +156,7 @@ public class Main extends Application {
         for (BaseShape shape : shapes) {
             if (shape.pointCollision(cursorX, cursorY)) {
                 if (!shape.selected) {
-                   selectShape(shape);
+                    selectShape(shape);
                 } else {
                     deselectShape(shape);
                 }
@@ -175,10 +171,12 @@ public class Main extends Application {
         }
         selected.clear();
     }
+
     private void selectShape(BaseShape shape) {
         shape.selected = true;
         selected.add(shape);
     }
+
     private void deselectShape(BaseShape shape) {
         shape.selected = false;
         selected.remove(shape);

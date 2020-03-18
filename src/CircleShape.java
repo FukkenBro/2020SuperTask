@@ -40,6 +40,4 @@ public class CircleShape extends BaseShape {
     }
 
 
-
-
 }
