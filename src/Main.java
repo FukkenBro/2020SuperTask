@@ -27,6 +27,7 @@ public class Main extends Application {
     //    private static BaseShape selected;
     private static ArrayList<BaseShape> selected = new ArrayList<>();
     public static ArrayList<BaseShape> shapes = new ArrayList<>();
+    private long time;
 
     public static GraphicsContext gc;
 
@@ -49,11 +50,11 @@ public class Main extends Application {
 
         this.gc = canvas.getGraphicsContext2D();
 
-        BaseShape ball1 = new CircleShape(10,10,255, 0, 0);
+        BaseShape ball1 = new CircleShape(10, 10, 255, 0, 0);
         shapes.add(ball1);
-        BaseShape ball2 = new CircleShape(10,150,0, 255, 0);
+        BaseShape ball2 = new CircleShape(10, 150, 0, 255, 0);
         shapes.add(ball2);
-        BaseShape ball3 = new CircleShape(10,300,0, 0, 255);
+        BaseShape ball3 = new CircleShape(10, 300, 0, 0, 255);
         shapes.add(ball3);
 
         scene.setOnKeyPressed(this::handleKeyPressed);
@@ -62,36 +63,63 @@ public class Main extends Application {
     }
 
     private void handleKeyPressed(KeyEvent event) {
+        int buttonHoldDelay = 100;
+        double stepIncrementFactor = 0.5;
+        boolean hold = false;
+        if (System.currentTimeMillis() - time <= buttonHoldDelay) {
+            hold = true;
+        }
         switch (event.getCode()) {
             case Q:
-                BaseShape ball = new CircleShape(0,0, RANDOM.nextInt(255) , RANDOM.nextInt(255), RANDOM.nextInt(255));
+                BaseShape ball = new CircleShape(0, 0, RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
                 shapes.add(ball);
-                if(ball.shapeCollision()){
+                if (ball.shapeCollision()) {
                     shapes.remove(ball);
                 }
                 break;
             case UP:
                 for (int i = 0; i < selected.size(); i++) {
+                    if (hold) {
+                        selected.get(i).step+=stepIncrementFactor;
+                    } else {
+                        selected.get(i).step = 1;
+                    }
                     selected.get(i).moveUp();
                 }
                 break;
             case DOWN:
                 for (int i = 0; i < selected.size(); i++) {
+                    if (hold) {
+                        selected.get(i).step+=stepIncrementFactor;
+                    } else {
+                        selected.get(i).step = 1;
+                    }
                     selected.get(i).moveDown();
                 }
                 break;
             case LEFT:
                 for (int i = 0; i < selected.size(); i++) {
+                    if (hold) {
+                        selected.get(i).step+=stepIncrementFactor;
+                    } else {
+                        selected.get(i).step = 1;
+                    }
                     selected.get(i).moveLeft();
                 }
                 break;
             case RIGHT:
                 for (int i = 0; i < selected.size(); i++) {
+                    if (hold) {
+                        selected.get(i).step+=stepIncrementFactor;
+                    } else {
+                        selected.get(i).step = 1;
+                    }
                     selected.get(i).moveRight();
                 }
                 break;
             case EQUALS:
                 for (int i = 0; i < selected.size(); i++) {
+
                     selected.get(i).scaleUp();
                 }
                 break;
@@ -100,10 +128,19 @@ public class Main extends Application {
                     selected.get(i).scaleDown();
                 }
                 break;
+            case A:
+                if(event.isControlDown()){
+                    clearSelections();
+                    for (BaseShape shape:shapes) {
+                        selectShape(shape);
+                    }
+                }
+                break;
         }
         for (int i = 0; i < selected.size(); i++) {
             selected.get(i).collision();
         }
+        time = System.currentTimeMillis();
         drawFrame();
     }
 
@@ -117,29 +154,15 @@ public class Main extends Application {
     private void handleMouseClick(MouseEvent mouseEvent) {
         double cursorX = mouseEvent.getX();
         double cursorY = mouseEvent.getY();
-        //crl не нажат и есть клик - очищаем выделенные объекты
         if (!mouseEvent.isControlDown()) {
-            boolean flag = false;
-            for (BaseShape shape : shapes) {
-                if (shape.pointCollision(cursorX, cursorY)) {
-                    flag = true;
-                    if(!shape.selected){
-                        flag = false;
-                    }
-                }
-            }
-            if (!flag) {
-                clearSelections();
-            }
+            clearSelections();
         }
         for (BaseShape shape : shapes) {
             if (shape.pointCollision(cursorX, cursorY)) {
                 if (!shape.selected) {
-                    shape.selected = true;
-                    selected.add(shape);
+                   selectShape(shape);
                 } else {
-                    shape.selected = false;
-                    selected.remove(shape);
+                    deselectShape(shape);
                 }
             }
         }
@@ -151,6 +174,14 @@ public class Main extends Application {
             selected.get(i).selected = !selected.get(i).selected;
         }
         selected.clear();
+    }
+    private void selectShape(BaseShape shape) {
+        shape.selected = true;
+        selected.add(shape);
+    }
+    private void deselectShape(BaseShape shape) {
+        shape.selected = false;
+        selected.remove(shape);
     }
 
 }

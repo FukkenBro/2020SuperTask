@@ -12,7 +12,8 @@ public class BaseShape implements Shape {
     protected int y;
     protected int r = 50;
     protected final int lineWidth = 10;
-    protected final static int step = 5;
+    public static double step = 1;
+    protected final static int scaleStep = 1;
     protected boolean selected;
 
     public BaseShape() {
@@ -101,14 +102,14 @@ public class BaseShape implements Shape {
     }
 
     public void scaleUp() {
-        r += 5;
+        r += scaleStep;
     }
 
     public void scaleDown() {
-        if (r <= 5) {
+        if (r <= scaleStep) {
             return;
         }
-        r -= 5;
+        r -= scaleStep;
     }
 
 }
