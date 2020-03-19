@@ -48,10 +48,10 @@ public class Main extends Application {
 
         BaseShape ball1 = new CircleShape(10, 10, 255, 0, 0);
         shapes.add(ball1);
-        BaseShape ball2 = new CircleShape(10, 150, 0, 255, 0);
-        shapes.add(ball2);
-        BaseShape ball3 = new CircleShape(10, 300, 0, 0, 255);
-        shapes.add(ball3);
+        BaseShape square = new SqareShape(10, 150, 0, 255, 0);
+        shapes.add(square);
+        BaseShape triangle = new TriangleShape(10, 300, 0, 0, 255);
+        shapes.add(triangle);
 
         scene.setOnKeyPressed(this::handleKeyPressed);
         scene.setOnMouseClicked(this::handleMouseClick);
@@ -70,9 +70,6 @@ public class Main extends Application {
             case Q:
                 BaseShape ball = new CircleShape(0, 0, RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
                 shapes.add(ball);
-                if (ball.shapeCollision()) {
-                    shapes.remove(ball);
-                }
                 break;
             case UP:
                 if (hold) {
@@ -96,7 +93,7 @@ public class Main extends Application {
                 break;
             case LEFT:
                 if (hold) {
-                    BaseShape.step= fastMov;
+                    BaseShape.step = fastMov;
                 } else {
                     BaseShape.step = defaultSpeed;
                 }
@@ -150,6 +147,7 @@ public class Main extends Application {
     private void handleMouseClick(MouseEvent mouseEvent) {
         double cursorX = mouseEvent.getX();
         double cursorY = mouseEvent.getY();
+        System.out.println("Cursor {"+cursorX+":"+cursorY+"}");
         if (!mouseEvent.isControlDown()) {
             clearSelections();
         }
