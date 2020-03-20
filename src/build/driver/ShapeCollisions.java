@@ -4,6 +4,8 @@ import build.data.BaseShape;
 
 public interface ShapeCollisions {
 
-    boolean pointCollision(BaseShape shape);
+    static boolean pointCollision(BaseShape shape, double cursorX, double cursorY){
+        return false;
+    }
 
 }

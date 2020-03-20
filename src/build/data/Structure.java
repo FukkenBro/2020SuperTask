@@ -1,10 +1,8 @@
-package build.driver;
-
-import build.data.*;
+package build.data;
 
 import java.util.ArrayList;
 
-public abstract class MainLayer implements Layout {
+public class Structure implements ShapesStructure {
 
     public static ArrayList<BaseShape> selectedShapes = new ArrayList<>();
     public static ArrayList<BaseShape> allShapes = new ArrayList<>();

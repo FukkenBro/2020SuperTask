@@ -5,7 +5,7 @@ import build.driver.Move;
 import build.driver.Scale;
 import javafx.scene.canvas.GraphicsContext;
 
-public class BaseShape implements Shape {
+public abstract class BaseShape implements Shape {
 
     public boolean selected;
 

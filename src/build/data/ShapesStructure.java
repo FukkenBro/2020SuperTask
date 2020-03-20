@@ -1,10 +1,10 @@
-package build.driver;
+package build.data;
 
 import build.data.*;
 
 import java.util.ArrayList;
 
-public interface Layout {
+public interface ShapesStructure {
 
     ArrayList<BaseShape> selectedShapes = new ArrayList<>();
 

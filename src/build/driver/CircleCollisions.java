@@ -2,7 +2,8 @@ package build.driver;
 
 import build.data.BaseShape;
 
-public abstract class CircleCollisions implements ShapeCollisions {
+public class CircleCollisions implements ShapeCollisions {
+
 
     public static boolean pointCollision(BaseShape circle, double cursorX, double cursorY) {
         double[] center = getCircleCenter(circle.x, circle.y, circle.r);

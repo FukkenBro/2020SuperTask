@@ -2,7 +2,7 @@ package build.driver;
 
 import build.data.BaseShape;
 
-public abstract class Scale implements ShapeScaling {
+public class Scale implements ShapeScaling {
 
     public static void scaleUp(BaseShape shape) {
         shape.r += BaseShape.scaleStep;

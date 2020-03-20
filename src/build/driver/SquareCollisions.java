@@ -2,7 +2,7 @@ package build.driver;
 
 import build.data.BaseShape;
 
-public abstract class SquareCollisions implements ShapeCollisions {
+public class SquareCollisions implements ShapeCollisions {
 
 
     public static boolean pointCollision(BaseShape square, double cursorX, double cursorY) {

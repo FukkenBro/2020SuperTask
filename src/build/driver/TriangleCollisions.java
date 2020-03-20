@@ -2,7 +2,7 @@ package build.driver;
 
 import build.data.BaseShape;
 
-public abstract class TriangleCollisions implements ShapeCollisions {
+public class TriangleCollisions implements ShapeCollisions {
 
     public static boolean pointCollision(BaseShape triangle, double cursorX, double cursorY) {
         int x = triangle.x;

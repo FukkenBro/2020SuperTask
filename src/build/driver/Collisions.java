@@ -3,7 +3,7 @@ package build.driver;
 import build.data.BaseShape;
 import build.data.ShapeType;
 
-public abstract class Collisions {
+public class Collisions {
 
     public static boolean pointCollision(BaseShape shape, double x, double y){
         if(shape.type== ShapeType.TRIANGLE){return TriangleCollisions.pointCollision(shape,x,y);}
