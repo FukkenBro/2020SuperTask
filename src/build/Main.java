@@ -1,6 +1,5 @@
 package build;
 
-import build.data.BaseShape;
 import build.data.Structure;
 import build.driver.KeyHandler;
 import build.driver.MouseHandler;
@@ -79,8 +78,6 @@ public class Main extends Application {
         if (System.currentTimeMillis() <= time + buttonHoldDelay) {
             hold = true;
         }
-        System.out.println("hold Main " + hold);
-        System.out.println("speed" + BaseShape.step);
         switch (event.getCode()) {
             case Z:
                 if (event.isControlDown()) {

@@ -19,7 +19,7 @@ public class SaveAndLoad {
 
     private static final int historySize = 512;
 
-    static LinkedList<String> history = new LinkedList<>();
+    public static LinkedList<String> history = new LinkedList<>();
 
     public static String serialize(Structure state) {
         JSONSerializer serializer = new JSONSerializer();

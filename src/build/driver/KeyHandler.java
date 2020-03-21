@@ -3,7 +3,6 @@ package build.driver;
 import build.Main;
 import build.data.BaseShape;
 import build.data.Direction;
-import build.data.Structure;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,19 +12,18 @@ import static build.data.ShapeType.*;
 
 public class KeyHandler {
 
-    private static Structure state = Main.state;
 
     private static double defaultSpeed = 1;
     private static double fastMov = 1;
 
     public static void redo() {
-        state = SaveAndLoad.getPrevState();
+        Main.state = SaveAndLoad.getPrevState();
     }
 
     public static void quickSave() {
-        Main.saveFile = SaveAndLoad.serialize(state.getState());
+        Main.saveFile = SaveAndLoad.serialize(Main.state.getState());
         try {
-            SaveAndLoad.saveToFile(state);
+            SaveAndLoad.saveToFile(Main.state);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,126 +31,124 @@ public class KeyHandler {
     }
 
     public static void quickLoad() {
-        state = SaveAndLoad.deserialize(Main.saveFile);
+        Main.state = SaveAndLoad.deserialize(Main.saveFile);
     }
 
     public static void loadFromFile() throws IOException {
-        state = SaveAndLoad.loadFromFile();
+        Main.state = SaveAndLoad.loadFromFile();
     }
 
     public static void cloneShapes() {
         ArrayList<BaseShape> tmpArr = new ArrayList<>();
         for (
-                int i = 0; i < state.selectedShapes.size(); i++) {
-            BaseShape tmp = state.selectedShapes.get(i);
+                int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            BaseShape tmp = Main.state.selectedShapes.get(i);
             BaseShape shape = tmp.cloneShape();
             tmpArr.add(shape);
         }
-        state.clearSelections();
+        Main.state.clearSelections();
         for (
                 int i = 0; i < tmpArr.size(); i++) {
-            state.allShapes.add(tmpArr.get(i));
-            state.selectShape(tmpArr.get(i));
+            Main.state.allShapes.add(tmpArr.get(i));
+            Main.state.selectShape(tmpArr.get(i));
         }
         tmpArr.clear();
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void delete() {
         for (
-                int i = 0; i < state.selectedShapes.size(); i++) {
-            state.deleteShape(state
-                    .selectedShapes.get(i));
+                int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.deleteShape(Main.state.selectedShapes.get(i));
         }
-        state.clearSelections();
-        SaveAndLoad.addAction(state);
+        Main.state.clearSelections();
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void createCircle() {
-        state.add(CIRCLE, 10, 10, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
-        SaveAndLoad.addAction(state);
+        Main.state.add(CIRCLE, 10, 10, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void createSquare() {
-        state.add(SQUARE, 10, 10, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
-        SaveAndLoad.addAction(state);
+        Main.state.add(SQUARE, 10, 10, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void createTriangle() {
-        state.add(TRIANGLE, 10, 10, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
-        SaveAndLoad.addAction(state);
+        Main.state.add(TRIANGLE, 10, 10, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void moveUP(boolean hold) {
-        System.out.println("hold " + hold);
         if (hold) {
             BaseShape.step += fastMov;
         } else {
             BaseShape.step = defaultSpeed;
         }
-        for (int i = 0; i < state.selectedShapes.size(); i++) {
-            state.selectedShapes.get(i).move(Direction.UP);
+        for (int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.selectedShapes.get(i).move(Direction.UP);
         }
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void moveDOWN(boolean hold) {
-        System.out.println("hold " + hold);
+
         if (hold) {
             BaseShape.step += fastMov;
         } else {
             BaseShape.step = defaultSpeed;
         }
-        for (int i = 0; i < state.selectedShapes.size(); i++) {
-            state.selectedShapes.get(i).move(Direction.DOWN);
+        for (int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.selectedShapes.get(i).move(Direction.DOWN);
         }
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void moveLEFT(boolean hold) {
-        System.out.println("hold " + hold);
+
         if (hold) {
             BaseShape.step += fastMov;
         } else {
             BaseShape.step = defaultSpeed;
         }
-        for (int i = 0; i < state.selectedShapes.size(); i++) {
-            state.selectedShapes.get(i).move(Direction.LEFT);
+        for (int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.selectedShapes.get(i).move(Direction.LEFT);
         }
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void moveRIGHT(boolean hold) {
-        System.out.println("hold " + hold);
+
         if (hold) {
             BaseShape.step += fastMov;
         } else {
             BaseShape.step = defaultSpeed;
         }
-        for (int i = 0; i < state.selectedShapes.size(); i++) {
-            state.selectedShapes.get(i).move(Direction.RIGHT);
+        for (int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.selectedShapes.get(i).move(Direction.RIGHT);
         }
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void scaleUP() {
-        for (int i = 0; i < state.selectedShapes.size(); i++) {
-            state.selectedShapes.get(i).scale(Direction.UP);
+        for (int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.selectedShapes.get(i).scale(Direction.UP);
         }
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void scaleDOWN() {
-        for (int i = 0; i < state.selectedShapes.size(); i++) {
-            state.selectedShapes.get(i).scale(Direction.DOWN);
+        for (int i = 0; i < Main.state.selectedShapes.size(); i++) {
+            Main.state.selectedShapes.get(i).scale(Direction.DOWN);
         }
-        SaveAndLoad.addAction(state);
+        SaveAndLoad.addAction(Main.state);
     }
 
     public static void selectAll() {
-        state.clearSelections();
-        for (BaseShape shape : state.allShapes) {
-            state.selectShape(shape);
+        Main.state.clearSelections();
+        for (BaseShape shape : Main.state.allShapes) {
+            Main.state.selectShape(shape);
         }
     }
 
