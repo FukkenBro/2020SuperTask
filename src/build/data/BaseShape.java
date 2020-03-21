@@ -7,12 +7,12 @@ import javafx.scene.canvas.GraphicsContext;
 
 public abstract class BaseShape implements Shape {
 
-    public boolean selected;
-
     public static final int lineWidth = 10;
     public static final int scaleStep = 1;
     public static double step = 1;
     public static GraphicsContext gc = Main.gc;
+
+    public boolean selected;
 
     public ShapeType type;
     public int x;
@@ -22,6 +22,9 @@ public abstract class BaseShape implements Shape {
     public int green;
     public int blue;
 
+    public BaseShape() {
+    }
+
     public BaseShape(ShapeType st, int x, int y, int red, int green, int blue) {
         this.type = st;
         this.x = x;
@@ -30,7 +33,6 @@ public abstract class BaseShape implements Shape {
         this.green = green;
         this.blue = blue;
     }
-
 
     public BaseShape cloneShape() {
         switch (this.type) {

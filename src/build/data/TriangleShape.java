@@ -1,9 +1,12 @@
 package build.data;
 
-import build.display.Draw;
+import build.display.Paint;
 import build.driver.TriangleCollisions;
 
 public class TriangleShape extends BaseShape {
+
+    public TriangleShape() {
+    }
 
     public TriangleShape(int x, int y, int red, int green, int blue) {
         super(ShapeType.TRIANGLE, x, y, red, green, blue);
@@ -20,6 +23,6 @@ public class TriangleShape extends BaseShape {
 
     @Override
     public void draw() {
-        Draw.drawTriangle(this);
+        Paint.drawTriangle(this);
     }
 }

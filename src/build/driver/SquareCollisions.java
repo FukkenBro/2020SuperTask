@@ -4,7 +4,6 @@ import build.data.BaseShape;
 
 public class SquareCollisions implements ShapeCollisions {
 
-
     public static boolean pointCollision(BaseShape square, double cursorX, double cursorY) {
 
         double x1 = square.x;

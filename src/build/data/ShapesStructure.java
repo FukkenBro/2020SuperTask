@@ -10,15 +10,16 @@ public interface ShapesStructure {
 
     ArrayList<BaseShape> allShapes = new ArrayList<>();
 
-    static void add(ShapeType type, int x, int y, int red, int green, int blue) {
-    }
+    void add(ShapeType type, int x, int y, int red, int green, int blue);
 
-    static void clearSelections() {
-    }
+    void clearSelections();
 
-    static void selectShape(BaseShape shape) {
-    }
+    void selectShape(BaseShape shape);
 
-    static void deselectShape(BaseShape shape) {
-    }
+    void deselectShape(BaseShape shape);
+
+    void deleteShape(BaseShape shape);
+
+    Structure getState();
+
 }

@@ -3,7 +3,7 @@ package build.display;
 import build.data.BaseShape;
 import javafx.scene.paint.Color;
 
-public class Draw {
+public class Paint {
 
     public static void drawCircle(BaseShape shape) {
         BaseShape.gc.setFill(Color.rgb(shape.red, shape.green, shape.blue));

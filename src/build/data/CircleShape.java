@@ -1,11 +1,13 @@
 package build.data;
 
-import build.display.Draw;
+import build.display.Paint;
 import build.driver.Collisions;
 
 
 public class CircleShape extends BaseShape {
 
+    public CircleShape() {
+    }
 
     public CircleShape(int x, int y, int red, int green, int blue) {
         super(ShapeType.CIRCLE, x, y, red, green, blue);
@@ -22,7 +24,7 @@ public class CircleShape extends BaseShape {
 
     @Override
     public void draw() {
-        Draw.drawCircle(this);
+        Paint.drawCircle(this);
     }
 
 }

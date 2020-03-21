@@ -1,9 +1,12 @@
 package build.data;
 
+import build.display.Paint;
 import build.driver.Collisions;
-import build.display.Draw;
 
 public class SquareShape extends BaseShape {
+
+    public SquareShape() {
+    }
 
     public SquareShape(int x, int y, int red, int green, int blue) {
         super(ShapeType.SQUARE, x, y, red, green, blue);
@@ -20,7 +23,7 @@ public class SquareShape extends BaseShape {
 
     @Override
     public void draw() {
-        Draw.drawSquare(this);
+        Paint.drawSquare(this);
     }
 }
 

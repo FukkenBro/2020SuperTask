@@ -1,9 +1,10 @@
 package build;
 
-import build.data.*;
 import build.data.Structure;
+import build.driver.KeyHandler;
+import build.driver.MouseHandler;
+import build.driver.SaveAndLoad;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,10 +12,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.io.IOException;
 
 import static build.data.ShapeType.*;
 
@@ -26,8 +27,12 @@ public class Main extends Application {
     public static GraphicsContext gc;
     public static boolean showPreroll = true;
 
-    private static final Random RANDOM = new Random();
-    private long time;
+    public static Structure state = new Structure();
+    public static String saveFile;
+
+    public static long time;
+    public static final int buttonHoldDelay = 100;
+    public static boolean hold = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,118 +53,85 @@ public class Main extends Application {
 
         gc = canvas.getGraphicsContext2D();
 
-
-        scene.setOnKeyPressed(this::handleKeyPressed);
+        scene.setOnKeyPressed(event -> {
+            try {
+                handleKeyPressed(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         scene.setOnMouseClicked(this::handleMouseClick);
 
-        preroll();
-        Structure.add(CIRCLE, 10, 10, 255, 100, 0);
-        Structure.add(SQUARE, 10, 150, 175, 100, 0);
-        Structure.add(TRIANGLE, 10, 300, 100, 100, 0);
-        //drawFrame();
+        if (showPreroll) {
+            preroll();
+        }
+
+        state.add(CIRCLE, 10, 10, 255, 100, 0);
+        state.add(SQUARE, 10, 150, 175, 100, 0);
+        state.add(TRIANGLE, 10, 300, 100, 100, 0);
+        SaveAndLoad.addAction(state);
     }
 
 
-
-    private void handleKeyPressed(KeyEvent event) {
-        int buttonHoldDelay = 100;
-        double fastMov = 1;
-        double defaultSpeed = 1;
-        boolean hold = false;
-        if (System.currentTimeMillis() - time <= buttonHoldDelay) {
+    private void handleKeyPressed(KeyEvent event) throws IOException {
+        hold = false;
+        if (time + buttonHoldDelay <= System.currentTimeMillis()) {
             hold = true;
         }
         switch (event.getCode()) {
+            case Z:
+                if (event.isControlDown()) {
+                    KeyHandler.redo();
+                }
+                break;
+            case F5:
+                KeyHandler.quickSave();
+                break;
+            case F6:
+                KeyHandler.quickLoad();
+                break;
+            case F7:
+                KeyHandler.loadFromFile();
+                break;
             case SHIFT:
-                ArrayList<BaseShape> tmpArr = new ArrayList<>();
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    BaseShape tmp = Structure.selectedShapes.get(i);
-                    BaseShape shape = tmp.cloneShape();
-                    tmpArr.add(shape);
-                }
-                Structure.clearSelections();
-                for (int i = 0; i < tmpArr.size(); i++) {
-                    Structure.allShapes.add(tmpArr.get(i));
-                    Structure.selectShape(tmpArr.get(i));
-                }
-                tmpArr.clear();
+                KeyHandler.cloneShapes();
                 break;
             case DELETE:
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.deleteShape(Structure.selectedShapes.get(i));
-                }
-                Structure.clearSelections();
+                KeyHandler.delete();
                 break;
             case DIGIT1:
-                Structure.add(CIRCLE, 10, 10, RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
+                KeyHandler.createCircle();
                 break;
             case DIGIT2:
-                Structure.add(TRIANGLE, 10, 10, RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
+                KeyHandler.createSquare();
                 break;
             case DIGIT3:
-                Structure.add(SQUARE, 10, 10, RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
+                KeyHandler.createTriangle();
                 break;
             case UP:
-                if (hold) {
-                    BaseShape.step += fastMov;
-                } else {
-                    BaseShape.step = defaultSpeed;
-                }
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).move(Direction.UP);
-                }
+                KeyHandler.moveUP();
                 break;
             case DOWN:
-                if (hold) {
-                    BaseShape.step += fastMov;
-                } else {
-                    BaseShape.step = defaultSpeed;
-                }
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).move(Direction.DOWN);
-                }
+                KeyHandler.moveDOWN();
                 break;
             case LEFT:
-                if (hold) {
-                    BaseShape.step += fastMov;
-                } else {
-                    BaseShape.step = defaultSpeed;
-                }
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).move(Direction.LEFT);
-                }
+                KeyHandler.moveLEFT();
                 break;
             case RIGHT:
-                if (hold) {
-                    BaseShape.step += fastMov;
-                } else {
-                    BaseShape.step = 1;
-                }
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).move(Direction.RIGHT);
-                }
+                KeyHandler.moveRIGHT();
                 break;
             case EQUALS:
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).scale(Direction.UP);
-                }
+                KeyHandler.scaleUP();
                 break;
             case PLUS:
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).scale(Direction.UP);
-                }
+                KeyHandler.scaleUP();
                 break;
             case MINUS:
-                for (int i = 0; i < Structure.selectedShapes.size(); i++) {
-                    Structure.selectedShapes.get(i).scale(Direction.DOWN);
-                }
+                KeyHandler.scaleDOWN();
                 break;
             case A:
                 if (event.isControlDown()) {
-                    Structure.clearSelections();
-                    for (BaseShape shape : Structure.allShapes) {
-                        Structure.selectShape(shape);
-                    }
+                    KeyHandler.selectAll();
                 }
                 break;
         }
@@ -170,42 +142,34 @@ public class Main extends Application {
     private void handleMouseClick(MouseEvent mouseEvent) {
         double cursorX = mouseEvent.getX();
         double cursorY = mouseEvent.getY();
-        System.out.println("Cursor {" + cursorX + ":" + cursorY + "}");
         if (!mouseEvent.isControlDown()) {
-            Structure.clearSelections();
+            state.clearSelections();
         }
-        for (int i = Structure.allShapes.size()-1; i >=0 ; i--) {
-            BaseShape shape = Structure.allShapes.get(i);
-            if (shape.pointCollision(cursorX, cursorY)) {
-                if (!shape.selected) {
-                    Structure.selectShape(shape);
-                    break;
-                } else {
-                    Structure.deselectShape(shape);
-                    break;
-                }
-            }
-        }
+        MouseHandler.clickSelection(cursorX, cursorY);
         drawFrame();
     }
-
 
     private void drawFrame() {
         gc.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
         gc.setFill(Color.rgb(0, 0, 0));
-        for (int i = 0; i < Structure.allShapes.size(); i++) {
-            Structure.allShapes.get(i).draw();
+        for (int i = 0; i < state.allShapes.size(); i++) {
+            state.allShapes.get(i).draw();
         }
     }
 
     private void preroll() {
         gc.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
         gc.setFill(Color.hsb(50, 0.5, 1));
-        gc.fillRect(0,0,BOARD_WIDTH,BOARD_HEIGHT);
+        gc.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
         gc.setFill(Color.hsb(0, 0, 0));
-        gc.fillText("Controls: \nMove: ARROWS; \nCreate shapes: 1-3; \nDelete selected: DELETE; \nScale UP/DOWN: +/-; \nSelect-all: CRTL+A; \nSelect-one: Mouse Click \nMerge: CTRL+Mouse Click, \nClone: SHIFT\n\n\n\n PRESS ANY KEY TO CONTINUE", BOARD_WIDTH/2-80, BOARD_HEIGHT/2-100);
-        for (int i = 0; i < Structure.allShapes.size(); i++) {
-            Structure.allShapes.get(i).draw();
+        gc.setFont(Font.font(20));
+        gc.fillText("Controls: \nMove: ARROWS (hold to move faster) \nCreate shapes: 1-3 \nDelete selected: DELETE \nScale UP/DOWN: +/-" +
+                "\nSelect-all: CRTL+A \nSelect-one: Mouse Click \nMerge: CTRL+Mouse Click \nClone: SHIFT" +
+                "\nQuick-Save to file: F5 \nQuick-Load: F6 \nLoad from File: F7 \nUndo last action: CTRL+Z" +
+                "\n\n\n " +
+                "PRESS ANY KEY TO CONTINUE", BOARD_WIDTH / 2 - 150, 50);
+        for (int i = 0; i < state.allShapes.size(); i++) {
+            state.allShapes.get(i).draw();
         }
     }
 
