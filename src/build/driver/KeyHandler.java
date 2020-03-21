@@ -4,6 +4,7 @@ import build.Main;
 import build.data.BaseShape;
 import build.data.Direction;
 import build.data.Structure;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,7 +14,6 @@ import static build.data.ShapeType.*;
 public class KeyHandler {
 
     private static Structure state = Main.state;
-    private static boolean hold = Main.hold;
 
     private static double defaultSpeed = 1;
     private static double fastMov = 1;
@@ -83,7 +83,8 @@ public class KeyHandler {
         SaveAndLoad.addAction(state);
     }
 
-    public static void moveUP() {
+    public static void moveUP(boolean hold) {
+        System.out.println("hold " + hold);
         if (hold) {
             BaseShape.step += fastMov;
         } else {
@@ -95,7 +96,8 @@ public class KeyHandler {
         SaveAndLoad.addAction(state);
     }
 
-    public static void moveDOWN() {
+    public static void moveDOWN(boolean hold) {
+        System.out.println("hold " + hold);
         if (hold) {
             BaseShape.step += fastMov;
         } else {
@@ -107,7 +109,8 @@ public class KeyHandler {
         SaveAndLoad.addAction(state);
     }
 
-    public static void moveLEFT() {
+    public static void moveLEFT(boolean hold) {
+        System.out.println("hold " + hold);
         if (hold) {
             BaseShape.step += fastMov;
         } else {
@@ -119,11 +122,12 @@ public class KeyHandler {
         SaveAndLoad.addAction(state);
     }
 
-    public static void moveRIGHT() {
+    public static void moveRIGHT(boolean hold) {
+        System.out.println("hold " + hold);
         if (hold) {
             BaseShape.step += fastMov;
         } else {
-            BaseShape.step = 1;
+            BaseShape.step = defaultSpeed;
         }
         for (int i = 0; i < state.selectedShapes.size(); i++) {
             state.selectedShapes.get(i).move(Direction.RIGHT);

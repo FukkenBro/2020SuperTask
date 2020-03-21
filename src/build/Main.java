@@ -1,5 +1,6 @@
 package build;
 
+import build.data.BaseShape;
 import build.data.Structure;
 import build.driver.KeyHandler;
 import build.driver.MouseHandler;
@@ -75,9 +76,11 @@ public class Main extends Application {
 
     private void handleKeyPressed(KeyEvent event) throws IOException {
         hold = false;
-        if (time + buttonHoldDelay <= System.currentTimeMillis()) {
+        if (System.currentTimeMillis() <= time + buttonHoldDelay) {
             hold = true;
         }
+        System.out.println("hold Main " + hold);
+        System.out.println("speed" + BaseShape.step);
         switch (event.getCode()) {
             case Z:
                 if (event.isControlDown()) {
@@ -109,16 +112,16 @@ public class Main extends Application {
                 KeyHandler.createTriangle();
                 break;
             case UP:
-                KeyHandler.moveUP();
+                KeyHandler.moveUP(hold);
                 break;
             case DOWN:
-                KeyHandler.moveDOWN();
+                KeyHandler.moveDOWN(hold);
                 break;
             case LEFT:
-                KeyHandler.moveLEFT();
+                KeyHandler.moveLEFT(hold);
                 break;
             case RIGHT:
-                KeyHandler.moveRIGHT();
+                KeyHandler.moveRIGHT(hold);
                 break;
             case EQUALS:
                 KeyHandler.scaleUP();
