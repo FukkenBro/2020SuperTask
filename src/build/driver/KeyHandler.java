@@ -15,7 +15,7 @@ public class KeyHandler {
     private static Structure state = Main.state;
     private static boolean hold = Main.hold;
 
-    private static double defaultSpeed = BaseShape.step;
+    private static double defaultSpeed = 1;
     private static double fastMov = 1;
 
     public static void redo() {
